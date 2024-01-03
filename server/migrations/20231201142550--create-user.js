@@ -7,25 +7,35 @@ module.exports = {
         allowNull: false,
         primaryKey: true,
         type: Sequelize.UUID,
-        defaultValue: Sequelize.UUIDV4,
+        defaultValue: Sequelize.literal("gen_random_uuid()"),
       },
       name: {
         type: Sequelize.STRING,
+        allowNull: false,
       },
       phone: {
         type: Sequelize.STRING,
+        unique: true,
+        allowNull: false,
       },
       email: {
         type: Sequelize.STRING,
+        unique: true,
       },
       address: {
         type: Sequelize.STRING,
       },
       password: {
         type: Sequelize.STRING,
+        allowNull: false,
       },
-      role: {
-        type: Sequelize.INTEGER,
+      roleCode: {
+        type: Sequelize.STRING,
+        references: {
+          model: "Roles",
+          key: "code",
+        },
+        defaultValue: "ROL7",
       },
       avatar: {
         type: Sequelize.STRING,
