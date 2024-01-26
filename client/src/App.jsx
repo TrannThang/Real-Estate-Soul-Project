@@ -14,14 +14,21 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useUserStore } from "./store/useUserStore";
 import { useEffect } from "react";
+import {
+  AdminLayout,
+  CreatePropertyType,
+  Dashboard,
+  ManagePropertyType,
+} from "./pages/admin";
+import { Personal, UserLayout } from "./pages/user";
 
 const App = () => {
   const { isShowModal } = useAppStore();
-  const { getCurrent, current, token } = useUserStore();
+  const { getCurrent, getRoles, token } = useUserStore();
   useEffect(() => {
     getCurrent();
+    getRoles();
   }, [token]);
-  console.log(current);
 
   return (
     <div className="">
@@ -33,6 +40,24 @@ const App = () => {
           <Route path={path.OUT_AGENTS} element={<OurAgent />} />
           <Route path={path.PROPERTIES} element={<Properties />} />
           <Route path={path.SEARCH} element={<Search />} />
+        </Route>
+        {/* Admin route */}
+        <Route path={path.ADMIN_LAYOUT} element={<AdminLayout />}>
+          <Route path={path.ADMIN_DASHBOARD} element={<Dashboard />} />
+          <Route
+            path={path.CREATE_PROPERTY_TYPE}
+            element={<CreatePropertyType />}
+          />
+          <Route
+            path={path.MANAGE_PROPERTY_TYPE}
+            element={<ManagePropertyType />}
+          />
+        </Route>
+
+        {/* UserRoute */}
+
+        <Route path={path.USER_LAYOUT} element={<UserLayout />}>
+          <Route path={path.PERSONAL} element={<Personal />} />
         </Route>
       </Routes>
       <ToastContainer

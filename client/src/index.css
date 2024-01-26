@@ -5,7 +5,12 @@
 @tailwind components;
 @tailwind utilities;
 
-html,
+html {
+  font-size: 14px;
+}
 body {
   height: 100%;
+}
+.otp-item {
+  width: 5rem !important;
 }

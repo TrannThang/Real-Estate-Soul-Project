@@ -21,3 +21,14 @@ Content-Type: application/json
 
 }
 
+### Insert
+POST http://localhost:5000/api/insert/roles
+Content-Type: application/json
+
+{
+    "password":"12345678",
+    "phone":"012345678910"
+
+}
+
+

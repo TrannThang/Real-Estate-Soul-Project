@@ -11,7 +11,7 @@ router.use(rateLimiter);
 router.post(
   "/",
   verifyToken,
-  isAdmin,
+  // isAdmin,
   validateDto(
     Joi.object({ name: stringReq, description: stringReq, image: stringReq })
   ),

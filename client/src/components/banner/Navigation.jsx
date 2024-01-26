@@ -9,13 +9,13 @@ import { useAppStore } from "~/store/useAppStore";
 import { Login } from "..";
 
 const Navigation = ({ location, navigate }) => {
-  const { token } = useUserStore();
+  const { current } = useUserStore();
   const { setModal } = useAppStore();
   return (
     <div
       className={twMerge(
         clsx(
-          " w-full flex items-center justify-between bg-transparent fixed z-50 top-[85px] px-[100px] py-[26px]",
+          " w-full flex items-center justify-between bg-transparent fixed z-10 top-[85px] px-[100px] py-[26px]",
           location.pathname !== "/" && "bg-white"
         )
       )}
@@ -43,7 +43,7 @@ const Navigation = ({ location, navigate }) => {
             {el.text}
           </NavLink>
         ))}
-        {!token ? (
+        {!current ? (
           <Button
             className={twMerge(
               clsx(

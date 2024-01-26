@@ -1,12 +1,13 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
-import { apiGetCurrent } from "~/apis/user";
+import { apiGetCurrent, apiGetRoles } from "~/apis/user";
 
 export const useUserStore = create(
   persist(
     (set, get) => ({
       token: null,
       current: null,
+      roles: [],
       setToken: (token) =>
         set(() => ({
           token,
@@ -17,7 +18,27 @@ export const useUserStore = create(
           return set(() => ({
             current: response.currentUser,
           }));
+        else
+          return set(() => ({
+            current: null,
+          }));
       },
+      getRoles: async () => {
+        const response = await apiGetRoles();
+        if (response.success)
+          return set(() => ({
+            roles: response.roles,
+          }));
+        else
+          return set(() => ({
+            roles: [],
+          }));
+      },
+      logout: () =>
+        set(() => ({
+          token: null,
+          current: null,
+        })),
     }),
     {
       name: "soul12",

@@ -13,7 +13,7 @@ instance.interceptors.request.use(
       config.headers = {
         Authorization: `Bearer ${token.state?.token}`,
       };
-    console.log(token);
+    // console.log(token);
     return config;
   },
   function (error) {
