@@ -15,58 +15,70 @@ const Navigation = ({ location, navigate }) => {
     <div
       className={twMerge(
         clsx(
-          " w-full flex items-center justify-between bg-transparent fixed z-10 top-[85px] px-[100px] py-[26px]",
+          "fixed w-full z-10 top-[85px]",
           location.pathname !== "/" && "bg-white"
         )
       )}
     >
-      <Link to="">
-        <img src="/logo1.png" alt="logo" className="w-[100px] object-contain" />
-      </Link>
       <div
-        className={clsx(
-          "flex text-lg items-center gap-6 ",
-          location.pathname === "/" ? "text-main-100" : "text-gray-700"
+        className={twMerge(
+          clsx(
+            "  flex items-center justify-between bg-transparent w-main mx-auto  z-10   py-[26px]"
+          )
         )}
       >
-        {navigation.map((el) => (
-          <NavLink
-            className={({ isActive }) =>
-              clsx(
-                isActive && " font-medium ",
-                location.pathname === "/" ? "text-white" : "text-gray-900"
-              )
-            }
-            key={el.id}
-            to={el.path}
-          >
-            {el.text}
-          </NavLink>
-        ))}
-        {!current ? (
-          <Button
-            className={twMerge(
-              clsx(
-                location.pathname === "/" &&
-                  "bg-transparent border-main-100 border"
-              )
-            )}
-            handleOnClick={() => setModal(true, <Login />)}
-          >
-            Sign In
-          </Button>
-        ) : (
-          <Button
-            className={twMerge(
-              clsx(
-                location.pathname === "/" &&
-                  "bg-transparent border-main-100 border"
-              )
-            )}
-          >
-            Add Listing
-          </Button>
-        )}
+        <Link to="">
+          <img
+            src="/logo1.png"
+            alt="logo"
+            className="w-[100px] object-contain"
+          />
+        </Link>
+        <div
+          className={clsx(
+            "flex text-lg items-center gap-6 ",
+            location.pathname === "/" ? "text-main-100" : "text-gray-700"
+          )}
+        >
+          {navigation.map((el) => (
+            <NavLink
+              className={({ isActive }) =>
+                clsx(
+                  isActive && " font-medium ",
+                  location.pathname === "/" ? "text-white" : "text-gray-900"
+                )
+              }
+              key={el.id}
+              to={el.path}
+            >
+              {el.text}
+            </NavLink>
+          ))}
+          {!current ? (
+            <Button
+              className={twMerge(
+                clsx(
+                  location.pathname === "/" &&
+                    "bg-transparent border-main-100 border"
+                )
+              )}
+              handleOnClick={() => setModal(true, <Login />)}
+            >
+              Sign In
+            </Button>
+          ) : (
+            <Button
+              className={twMerge(
+                clsx(
+                  location.pathname === "/" &&
+                    "bg-transparent border-main-100 border"
+                )
+              )}
+            >
+              Add Listing
+            </Button>
+          )}
+        </div>
       </div>
     </div>
   );

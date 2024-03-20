@@ -5,7 +5,7 @@ const Modal = () => {
   return (
     <div
       onClick={() => setModal(false, null)}
-      className="absolute z-[1000] top-0 left-0 h-screen flex items-center justify-center w-screen bg-overlay-50"
+      className="fixed z-[1000] w-full top-0 left-0 h-full flex items-center justify-center  bg-overlay-50"
     >
       {contentModal}
     </div>
