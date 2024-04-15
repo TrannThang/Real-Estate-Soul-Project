@@ -3,6 +3,7 @@ const db = require("../models/index");
 const { throwErrorWithStatus } = require("../middlewares/errorHandler");
 const { Op, Sequelize } = require("sequelize");
 const redis = require("../config/redis.config");
+const { generateKeyRedis } = require("../utils/fn");
 
 const createNewPropertyTypes = asyncHandler(async (req, res) => {
   const { name } = req.body;
@@ -46,20 +47,22 @@ const getPropertyTypes = asyncHandler(async (req, res) => {
 
     options.order = order;
   }
-
+  const filter = {
+    where: query,
+    ...options,
+  };
   if (!limit) {
-    const alreadyGetAll = await redis.get("get-property-type");
+    const keys = generateKeyRedis(filter);
+    const alreadyGetAll = await redis.get(keys);
     if (alreadyGetAll)
       return res.json({
         success: true,
         mes: "Got",
         propertyTypes: JSON.parse(alreadyGetAll),
       });
-    const response = await db.PropertyType.findAll({
-      where: query,
-      ...options,
-    });
-    redis.set("get-property-type", JSON.stringify(response));
+    const response = await db.PropertyType.findAll({ ...filter });
+    redis.set(keys, JSON.stringify(response));
+    redis.expireAt(keys, parseInt(+new Date() / 1000) + 86400); //24h
 
     return res.json({
       success: response.length > 0,

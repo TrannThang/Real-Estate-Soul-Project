@@ -14,4 +14,5 @@ export { default as InputFile } from "./inputs/InputFile";
 export { default as AdminSidebar } from "./sidebar/AdminSidebar";
 export { default as OtpVerifier } from "./auth/OtpVerifier";
 export { default as Search } from "./searchs/Search";
+export { default as SelectPrice } from "./searchs/SelectPrice";
 export { default as PropertyCard } from "./properties/PropertyCard";

@@ -2,6 +2,7 @@ const asyncHandler = require("express-async-handler");
 const db = require("../models/index");
 const { throwErrorWithStatus } = require("../middlewares/errorHandler");
 const redis = require("../config/redis.config");
+const { Sequelize, Op } = require("sequelize");
 
 module.exports = {
   createNewProperty: asyncHandler(async (req, res) => {
@@ -13,7 +14,7 @@ module.exports = {
     });
   }),
   getProperties: asyncHandler(async (req, res) => {
-    const { limit, page, fields, name, sort, ...query } = req.query;
+    const { limit, page, fields, address, sort, price, ...query } = req.query;
     const options = {};
     if (fields) {
       const attributes = fields.split(",");
@@ -25,12 +26,22 @@ module.exports = {
       else options.attributes = attributes;
     }
     //Filter by query
-    // if (name)
-    //   query.name = Sequelize.where(
-    //     Sequelize.fn("LOWER", Sequelize.col("name")),
-    //     "LIKE",
-    //     `%${name.toLocaleLowerCase()}%`
-    //   );
+    if (address)
+      query.address = Sequelize.where(
+        Sequelize.fn("LOWER", Sequelize.col("Property.address")),
+        "LIKE",
+        `%${address.toLocaleLowerCase()}%`
+      );
+    //Price
+    if (price) {
+      const isBetweenFilter = price?.every((el) => !isNaN(el));
+      if (isBetweenFilter) query.price = { [Op.between]: price };
+      else {
+        const number = price?.find((el) => !isNaN(el));
+        const operator = price?.find((el) => isNaN(el));
+        query.price = { [Op[operator]]: number };
+      }
+    }
     //sorting
     if (sort) {
       const order = sort
@@ -66,6 +77,7 @@ module.exports = {
     const offset = (page && +page > 1 ? +page - 1 : 0) * limit;
     if (offset) options.offset = offset;
     options.limit = +limit;
+    console.log(query);
     const response = await db.Property.findAndCountAll({
       where: query,
       ...options,

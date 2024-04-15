@@ -1,12 +1,25 @@
 import clsx from "clsx";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useSearchParams } from "react-router-dom";
+import {
+  Navigate,
+  createSearchParams,
+  useNavigate,
+  useSearchParams,
+} from "react-router-dom";
 import { toast } from "react-toastify";
 import { twMerge } from "tailwind-merge";
 import { apiGetProperties } from "~/apis/properties";
-import { BreadCrumb, Button, InputSelect, PropertyCard } from "~/components";
+import {
+  BreadCrumb,
+  Button,
+  InputSelect,
+  PropertyCard,
+  Search,
+} from "~/components";
 import { Pagination } from "~/components/pagination";
+import { CiBoxList } from "react-icons/ci";
+import { useAppStore } from "~/store/useAppStore";
 
 const Properties = () => {
   const [properties, setProperties] = useState();
@@ -18,19 +31,23 @@ const Properties = () => {
     formState: { errors },
     watch,
   } = useForm();
-  // const sort = watch("sort");
+  const sort = watch("sort");
+  const { setModal } = useAppStore();
+  const navigate = useNavigate();
   useEffect(() => {
     const fetchProperties = async (params) => {
       const response = await apiGetProperties({
-        limit: 9,
+        limit: 6,
         ...params,
       });
       if (response.success) setProperties(response.properties);
       else toast.error(response.mes);
     };
     const params = Object.fromEntries([...searchParams]);
+    if (params.price) params.price = searchParams.getAll("price");
+    if (sort) params.sort = sort;
     fetchProperties(params);
-  }, [searchParams]);
+  }, [searchParams, sort]);
 
   return (
     <div className="w-full">
@@ -45,21 +62,35 @@ const Properties = () => {
       </div>
       <div className="w-main mx-auto my-20">
         <div className="my-4 flex justify-between text-sm items-center">
-          <InputSelect
-            register={register}
-            placeholder="Select"
-            id="sort"
-            errors={errors}
-            options={[
-              { label: "Lastest", value: "-createdAt" },
-              { label: "Oldest", value: "createdAt" },
-              { label: "A - Z", value: "name" },
-              { label: "Z - A", value: "-name" },
-            ]}
-            containerClassname="flex-row items-center gap-2"
-            label="Sort: "
-            inputClassname="w-fit rounded-md"
-          />
+          <div className="flex items-center gap-4">
+            <span
+              onClick={() => setModal(true, <Search direction="vertical" />)}
+              className="cursor-pointer "
+            >
+              <CiBoxList size={24} />
+            </span>
+            <InputSelect
+              register={register}
+              placeholder="Select"
+              id="sort"
+              errors={errors}
+              options={[
+                { label: "Lastest", code: "-createdAt" },
+                { label: "Oldest", code: "createdAt" },
+                { label: "A - Z", code: "name" },
+                { label: "Z - A", code: "-name" },
+              ]}
+              containerClassname="flex-row items-center gap-2"
+              label="Sort by "
+              inputClassname="w-fit rounded-md"
+            />
+            <Button
+              handleOnClick={() => navigate(location.pathname)}
+              className="whitespace-nowrap"
+            >
+              Reset Filter
+            </Button>
+          </div>
 
           <div className="flex items-center gap-4">
             <Button
