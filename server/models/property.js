@@ -13,6 +13,10 @@ module.exports = (sequelize, DataTypes) => {
         as: "rPostedBy",
       });
       Property.belongsTo(models.User, { foreignKey: "owner", as: "rOwner" });
+      Property.belongsTo(models.PropertyType, {
+        foreignKey: "propertyTypeId",
+        as: "rPropertyType",
+      });
     }
   }
   Property.init(

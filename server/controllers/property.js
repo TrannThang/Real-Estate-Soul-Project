@@ -5,14 +5,14 @@ const redis = require("../config/redis.config");
 const { Sequelize, Op } = require("sequelize");
 
 module.exports = {
-  createNewProperty: asyncHandler(async (req, res) => {
-    const response = await db.User.create;
-    return res.json({
-      success: Boolean(response),
-      mes: response ? "Got" : "Cannot get user",
-      currentUser: response,
-    });
-  }),
+  // createNewProperty: asyncHandler(async (req, res) => {
+  //   const response = await db.User.create;
+  //   return res.json({
+  //     success: Boolean(response),
+  //     mes: response ? "Got" : "Cannot get user",
+  //     currentUser: response,
+  //   });
+  // }),
   getProperties: asyncHandler(async (req, res) => {
     const { limit, page, fields, address, sort, price, ...query } = req.query;
     const options = {};
@@ -77,7 +77,7 @@ module.exports = {
     const offset = (page && +page > 1 ? +page - 1 : 0) * limit;
     if (offset) options.offset = offset;
     options.limit = +limit;
-    console.log(query);
+    // console.log(query);
     const response = await db.Property.findAndCountAll({
       where: query,
       ...options,
@@ -100,6 +100,33 @@ module.exports = {
       properties: response
         ? { ...response, limit: +limit, page: +page ? +page : 1 }
         : null,
+    });
+  }),
+  getOneById: asyncHandler(async (req, res) => {
+    const { propertyId } = req.params;
+    const response = await db.Property.findByPk(propertyId, {
+      include: [
+        {
+          model: db.PropertyType,
+          as: "rPropertyType",
+          attributes: ["name", "image"],
+        },
+        {
+          model: db.User,
+          as: "rPostedBy",
+          attributes: ["name", "phone", "avatar"],
+        },
+        {
+          model: db.User,
+          as: "rOwner",
+          attributes: ["name", "phone", "avatar"],
+        },
+      ],
+    });
+    return res.json({
+      success: !!response,
+      mes: response ? "Got" : "Cannot get property",
+      data: response,
     });
   }),
 };

@@ -8,6 +8,7 @@ const rateLimiter = require("../middlewares/rateLimiter");
 
 router.use(rateLimiter);
 
+router.get("/one/:propertyId", ctrls.getOneById);
 router.get("/", ctrls.getProperties);
 
 module.exports = router;

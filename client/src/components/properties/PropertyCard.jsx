@@ -9,6 +9,8 @@ import {
 import { PiBathtubLight } from "react-icons/pi";
 import { BsTextarea } from "react-icons/bs";
 import { FaRegHeart } from "react-icons/fa";
+import { Link } from "react-router-dom";
+import path from "~/utils/path,";
 
 const PropertyCard = ({ properties }) => {
   return (
@@ -19,9 +21,13 @@ const PropertyCard = ({ properties }) => {
         className="w-full h-[240px] object-cover rounded-t-md"
       />
       <div className="p-4 flex flex-col gap-4">
-        <h1 className="text-2xl font-medium line-clamp-2  text-gray-700">
+        <Link
+          to={`/${path.PROPERTIES}/${properties.id}`}
+          state={{ name: properties.name }}
+          className="text-2xl hover:underline font-medium line-clamp-2  text-gray-700"
+        >
           {properties?.name}
-        </h1>
+        </Link>
         <span className="text-xl flex items-center gap-1 font-bold text-main-500">
           <MdAttachMoney size={18} />
           {`${formatMoney(properties?.price)}`}

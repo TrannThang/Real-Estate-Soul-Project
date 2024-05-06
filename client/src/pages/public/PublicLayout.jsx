@@ -7,13 +7,7 @@ import { useAppStore } from "~/store/useAppStore";
 const PublicLayout = ({ location }) => {
   // const { isShowModal } = useAppStore();
   return (
-    <main
-    // className={clsx(
-    //   isShowModal
-    //     ? "overflow-hidden max-h-screen"
-    //     : "overflow-auto max-h-full"
-    // )}
-    >
+    <main className="">
       <TopHeader />
       <Navigation />
       <div className={clsx(location.pathname === "/" ? "pt-0" : "pt-[232px]")}>

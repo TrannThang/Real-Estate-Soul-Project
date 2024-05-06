@@ -10,7 +10,7 @@ const OtpVerifier = ({ phone, cb }) => {
     window.confirmationResult
       .confirm(otp)
       .then((result) => {
-        console.log(result);
+        // console.log(result);
         setIsLoading(false);
         cb();
       })

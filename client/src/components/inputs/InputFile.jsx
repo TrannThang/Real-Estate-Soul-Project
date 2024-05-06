@@ -55,7 +55,6 @@ const InputFile = ({
   }, [rawImages]);
   useEffect(() => {
     getImages(images);
-    // else setImages([]);
   }, [images]);
 
   const handleDeleteImage = (e, imageId) => {

@@ -3,6 +3,8 @@ import { apiGetPropertyTypes } from "~/apis/propertyType";
 
 export const usePropertiesStore = create((set) => ({
   propertyTypes: [],
+  currentProperty: null,
+
   getPropertyTypes: async (params) => {
     const response = await apiGetPropertyTypes(params);
     if (response.success)

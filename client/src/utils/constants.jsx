@@ -1,6 +1,7 @@
 import path from "./path,";
 import { RiDashboardLine } from "react-icons/ri";
 import { BsFillHouseAddFill } from "react-icons/bs";
+import { FaRegUserCircle } from "react-icons/fa";
 
 export const navigation = [
   {
@@ -55,6 +56,15 @@ export const adminSideBar = [
         name: "Manage",
       },
     ],
+  },
+];
+export const userSideBar = [
+  {
+    id: 12,
+    name: "Personal",
+    path: `/${path.USER_LAYOUT}/${path.PERSONAL}`,
+    icon: <FaRegUserCircle />,
+    type: "SINGLE",
   },
 ];
 

@@ -64,7 +64,7 @@ const TopHeader = ({ location }) => {
             <div className="flex flex-col gap-2">
               <span>{current?.name}</span>
               <span>
-                ID: <span>{current?.id?.slice(0, 6)}</span>
+                ID: <span>{current?.id}</span>
               </span>
             </div>
             <img

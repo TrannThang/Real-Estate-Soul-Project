@@ -70,7 +70,7 @@ const Login = ({ navigate }) => {
     if (variant === "REGISTER") {
       if (data?.roleCode !== "ROL7") {
         handleSendOTP(data.phone);
-      }
+      } else handleRegister(data);
     }
     if (variant === "LOGIN") {
       const { name, role, ...payload } = data;
@@ -83,9 +83,9 @@ const Login = ({ navigate }) => {
     }
   };
   const handleRegister = async (data) => {
-    // console.log(data);
-    // setIsLoading(true);
-    const response = await apiRegister(data);
+    const { roleCode, ...payload } = data;
+    if (!roleCode === "ROL7 ") data.roleCode = roleCode;
+    const response = await apiRegister(payload);
     if (response.success) {
       Swal.fire({
         icon: "success",
@@ -160,10 +160,10 @@ const Login = ({ navigate }) => {
           placeholder="Type your phone number"
           validate={{
             required: "This field cannot empty.",
-            pattern: {
-              value: /(|0[1|3|5|7|8|9])+([0-9]{8})\b/,
-              message: "Phone number invalid",
-            },
+            // pattern: {
+            //   value: /(|0[1|3|5|7|8|9])+([0-9]{8})\b/,
+            //   message: "Phone number invalid",
+            // },
           }}
           errors={errors}
         />
