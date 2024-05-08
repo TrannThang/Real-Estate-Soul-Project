@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { apiGetDetailProperty } from "~/apis/properties";
-import { BoxInfo, BreadCrumb, Images } from "~/components";
+import { apiGetDetailProperty, apiGetProperties } from "~/apis/properties";
+import { BoxInfo, BreadCrumb, Images, Map, RelatedPost } from "~/components";
 import { SlLocationPin } from "react-icons/sl";
 import DOMPurify from "dompurify";
 import { formatMoney } from "~/utils/helper";
@@ -20,6 +20,14 @@ const InfoCell = ({ title, value, unit = "" }) => {
 const PropertyDetail = () => {
   const { id } = useParams();
   const [propertyDetail, setPropertyDetail] = useState();
+  const [relatedProperties, setRelatedProperties] = useState({
+    propertyType: null,
+    listingTypes: null,
+  });
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [id]);
 
   useEffect(() => {
     const fetchDetailProperty = async () => {
@@ -28,8 +36,38 @@ const PropertyDetail = () => {
         setPropertyDetail(response.data);
       }
     };
+
     fetchDetailProperty();
   }, [id]);
+  useEffect(() => {
+    const fetchRelatedPost = async () => {
+      const [propertyType, listingTypes] = await Promise.all([
+        apiGetProperties({
+          propertyTypeId: propertyDetail.propertyTypeId,
+          limit: 5,
+          fields: "name,id,featuredImage,price,listingType,isAvailable",
+        }),
+        apiGetProperties({
+          listingType: propertyDetail.listingType,
+          limit: 5,
+          fields: "name,id,featuredImage,price,listingType,isAvailable",
+        }),
+      ]);
+      if (propertyType.success)
+        setRelatedProperties((prev) => ({
+          ...prev,
+          propertyType: propertyType.properties,
+        }));
+      if (listingTypes.success)
+        setRelatedProperties((prev) => ({
+          ...prev,
+          listingTypes: listingTypes.properties,
+        }));
+    };
+    if (propertyDetail) {
+      fetchRelatedPost();
+    }
+  }, [propertyDetail]);
   return (
     <div className="w-full pb-[500px]">
       <div className="relative w-full">
@@ -127,6 +165,9 @@ const PropertyDetail = () => {
                   </tbody>
                 </table>
               </div>
+              <div className="w-full h-[300px] bg-gray-100 rounded-md ]">
+                {/* <Map /> */}
+              </div>
             </div>
             <div className="col-span-3 flex flex-col gap-6">
               <BoxInfo
@@ -138,6 +179,14 @@ const PropertyDetail = () => {
                 role="Owner"
                 roleStyle="text-red-600"
                 data={propertyDetail.rOwner}
+              />
+              <RelatedPost
+                title="Related Properties"
+                data={relatedProperties.propertyType?.rows}
+              />
+              <RelatedPost
+                title={`Propertices for ${propertyDetail.listingType}`}
+                data={relatedProperties.listingTypes?.rows}
               />
             </div>
           </div>

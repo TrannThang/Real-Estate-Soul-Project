@@ -15,7 +15,7 @@ const Navigation = ({ location, navigate }) => {
     <div
       className={twMerge(
         clsx(
-          "fixed w-full z-10 top-[85px]",
+          "fixed w-full z-[9999] top-[85px]",
           location.pathname !== "/" && "bg-white"
         )
       )}
